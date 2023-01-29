@@ -1,0 +1,10 @@
+/* import LdbService from '../services/learderboard.service';
+import LdbRepository from '../repositories/leaderboard.repository';
+import LdbController from '../controllers/leaderbar.controller';
+
+export default () => {
+  const model = new LdbRepository();
+  const service = new LdbService(model);
+  const controller = new LdbController(service);
+  return controller;
+}; */

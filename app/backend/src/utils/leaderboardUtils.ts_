@@ -1,0 +1,59 @@
+import { ILeaderboard, TTeamScore, TMatchesEnd } from '../interfaces/leaderboard.interface';
+import { IMatchTeam } from '../interfaces/matches.interface';
+
+const aftermath = (acc: TMatchesEnd, teamScore: number, enemyScore: number) => {
+  if (teamScore > enemyScore) acc.totalVictories += 3;
+  else if (teamScore < enemyScore) acc.totalLosses += 0;
+  else acc.totalDraws += 1;
+  acc.goalsFavor += teamScore;
+  acc.goalsOwn += enemyScore;
+  return acc;
+};
+
+const updateMatches = (teamMatches: IMatchTeam[], home: boolean) => {
+  if (home) {
+    return teamMatches.reduce((acc, { homeTeamGoals, awayTeamGoals }) => (
+      aftermath(acc, homeTeamGoals, awayTeamGoals)
+    ), { totalVictories: 0, totalDraws: 0, totalLosses: 0, goalsFavor: 0, goalsOwn: 0 });
+  }
+
+  return teamMatches.reduce((acc, { awayTeamGoals, homeTeamGoals }) => (
+    aftermath(acc, awayTeamGoals, homeTeamGoals)
+  ), { totalVictories: 0, totalDraws: 0, totalLosses: 0, goalsFavor: 0, goalsOwn: 0 });
+};
+
+export const matchesScore = (teamMaches: IMatchTeam[], homeMatches: boolean): TTeamScore => {
+  const result = updateMatches(teamMaches, homeMatches);
+  const totalGames = teamMaches.length;
+  const totalPoints = (result.totalVictories * 3) + result.totalDraws;
+
+  return ({
+    totalPoints,
+    totalGames,
+    ...result,
+    goalsBalance: result.goalsFavor - result.goalsOwn,
+    efficiency: Number(((totalPoints / (totalGames * 3)) * 100).toFixed(2)),
+  });
+};
+
+export const galleryLdb = (homeScore: TTeamScore, awayScore: TTeamScore): TTeamScore => {
+  const homeResult = Object.entries(homeScore);
+  const awayResult = Object.entries(awayScore);
+  const score = homeResult.map((e, i) => {
+    const offset = e[1] + awayResult[i][1];
+    return [e[0], offset];
+  });
+  const data = Object.fromEntries(score) as TTeamScore;
+
+  return ({
+    ...data,
+    goalsBalance: data.goalsFavor - data.goalsOwn,
+    efficiency: Number(((data.totalPoints / (data.totalGames * 3)) * 100).toFixed(2)),
+  });
+};
+
+export const sortLdb = (Ldb: ILeaderboard[]): ILeaderboard[] => {
+  Ldb.sort((a, b) => b.totalPoints - a.totalPoints || b.totalVictories - a.totalVictories
+    || b.goalsBalance - a.goalsBalance || b.goalsFavor - a.goalsFavor || b.goalsOwn - a.goalsOwn);
+  return Ldb;
+};

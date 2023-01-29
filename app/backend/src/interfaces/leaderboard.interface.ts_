@@ -1,0 +1,29 @@
+export interface ILeaderboard {
+  name: string,
+  totalPoints: number,
+  totalGames: number,
+  totalVictories: number,
+  totalDraws: number,
+  totalLosses: number,
+  goalsFavor: number,
+  goalsOwn: number,
+  goalsBalance: number,
+  efficiency: number
+}
+
+export type TTeamScore = Omit<ILeaderboard, 'name'>;
+
+export type TMatchesEnd = Omit<TTeamScore,
+'totalPoints' | 'totalGames' | 'goalsBalance' | 'efficiency'>;
+
+export interface ILdbModel {
+  getHomeLdb(): Promise<ILeaderboard[]>
+  getAwayLdb(): Promise<ILeaderboard[]>
+  getAll(): Promise<ILeaderboard[]>
+}
+
+export interface ILdbService {
+  getHomeLdb(): Promise<ILeaderboard[]>
+  getAwayLdb(): Promise<ILeaderboard[]>
+  getAll(): Promise<ILeaderboard[]>
+}

@@ -1,0 +1,21 @@
+/* import { ILeaderboard, ILdbModel, ILdbService } from '../interfaces/leaderboard.interface';
+
+export default class LdbService implements ILdbService {
+  constructor(private _model: ILdbModel) { }
+
+  async getHomeLdb(): Promise<ILeaderboard[]> {
+    const ldb = await this._model.getHomeLdb();
+    return ldb;
+  }
+
+  async getAwayLdb(): Promise<ILeaderboard[]> {
+    const ldb = await this._model.getAwayLdb();
+    return ldb;
+  }
+
+  async getAll(): Promise<ILeaderboard[]> {
+    const ldb = await this._model.getAll();
+    return ldb;
+  }
+}
+ */

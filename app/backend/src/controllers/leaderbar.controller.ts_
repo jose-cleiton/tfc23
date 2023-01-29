@@ -1,0 +1,21 @@
+import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { ILdbService } from '../interfaces/leaderboard.interface';
+
+export default class LdbController {
+  constructor(private _service: ILdbService) { }
+  async getHomeLdb(_req: Request, res: Response) {
+    const ldb = await this._service.getHomeLdb();
+    return res.status(StatusCodes.OK).send(ldb);
+  }
+
+  async getAwayLdb(_req: Request, res: Response) {
+    const ldb = await this._service.getAwayLdb();
+    return res.status(StatusCodes.OK).send(ldb);
+  }
+
+  async getAll(_req: Request, res: Response) {
+    const ldb = await this._service.getAll();
+    return res.status(StatusCodes.OK).send(ldb);
+  }
+}
